@@ -15,4 +15,5 @@ Statistical analysis includes the count, mean, standard deviation, extremes, and
 #### Managing Records
 Employees can be added, removed by ID, and queried by any column. While adding an employee, basic regex matching is used to validate that entered names, phones, and emails are as realistic as possible. <br><br>
 Existing employee records will have to be manually edited in the CSV file to change information. The database cannot be directly interacted with, but all records are synced with the CSV file upon exiting. <br><br>
+Database integrity can be manually verified by uncommenting line 32 in Records.py and comparing entries to the CSV. <br><br>
 *Note: Manually terminating the program will not save any changes - exit the program by selecting option 'Q' to save all changes.*

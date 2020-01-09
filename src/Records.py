@@ -23,11 +23,13 @@ class Records:
         self.df['AGE'] = (date - self.df['DOB']).dt.components.days // 365
         self.df['COMPANY_AGE'] = (date - self.df['DOJ']).dt.components.days // 365
 
+    def save(self, path=DATA_PATH):
         self.df['DOB'] = self.df['DOB'].dt.strftime('%m/%d/%Y')
         self.df['DOJ'] = self.df['DOJ'].dt.strftime('%m/%d/%Y')
 
-    def save(self, path=DATA_PATH):
         self.df.to_csv(path, index=False)
+        self.database.sync_df(self.df)
+        # self.database.print_table()
         self.database.commit()
         print('SUCCESSFULLY SAVED RECORDS')
 
@@ -39,14 +41,12 @@ class Records:
         row = [employee_id, name, dob, doj, phone,
                email, salary, gender, age, 0, weight]
         self.df.loc[self.df.shape[0]] = row
-        self.database.add_employee(row)
         print('SUCCESSFULLY ADDED EMPLOYEE')
 
     def remove_employee(self, employee_id):
         row = self.df[self.df['ID'] == employee_id].index
         if not row.empty:
             self.df.drop(row, inplace=True)
-            self.database.remove_employee(employee_id)
             print('SUCCESSFULLY REMOVED EMPLOYEE')
         else:
             print('INVALID EMPLOYEE ID')

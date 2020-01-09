@@ -11,11 +11,13 @@ class Database:
 
     def commit(self):
         self.connection.commit()
+        self.cursor.close()
         self.connection.close()
 
     def create_table(self):
+        drop_table = """DROP TABLE employees"""
         create_table = """
-            CREATE TABLE IF NOT EXISTS employees (
+            CREATE TABLE employees (
                 id TEXT PRIMARY KEY,
                 employee_name TEXT NOT NULL,
                 dob TEXT NOT NULL,
@@ -27,7 +29,12 @@ class Database:
                 age INTEGER NOT NULL,
                 company_age INTEGER NOT NULL,
                 weight INTEGER NOT NULL);"""
+        self.cursor.execute(drop_table)
         self.cursor.execute(create_table)
+
+    def sync_df(self, df):
+        for index, row in df.iterrows():
+            self.add_employee(row)
 
     def add_employee(self, values):
         add_employee = """
@@ -36,10 +43,6 @@ class Database:
             salary, gender, age, company_age, weight) 
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         self.cursor.execute(add_employee, values)
-
-    def remove_employee(self, employee_id):
-        remove_employee = """DELETE FROM employees WHERE id=?"""
-        self.cursor.execute(remove_employee, [employee_id])
 
     def print_table(self):
         get_all_employees = """SELECT * FROM employees"""

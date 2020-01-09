@@ -42,7 +42,9 @@ def is_valid_gender(gender):
 
 def is_valid_date(date):
     try:
-        datetime.strptime(date, '%m/%d/%Y').date()
+        date = datetime.strptime(date, '%m/%d/%Y').date()
+        if date > get_date().date():
+            raise ValueError
         return True
     except ValueError:
         return False
